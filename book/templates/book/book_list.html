@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Library Books</title>
+</head>
+
+<body>
+
+    <h1>Library Books</h1>
+
+    <form method="get">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search by title or author"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'add_book' %}">
+        Add New Book
+    </a>
+
+    <hr>
+
+    {% for book in books %}
+
+        <h2>{{ book.title }}</h2>
+
+        <p>
+            Author:
+            {{ book.author.first_name }}
+            {{ book.author.last_name }}
+        </p>
+
+        <p>
+            Publisher:
+            {{ book.publisher.name }}
+        </p>
+
+        <p>
+            Genre:
+            {{ book.get_genre_display }}
+        </p>
+
+        <p>
+            Price:
+            {{ book.price }}
+        </p>
+
+        <p>
+            Publication date:
+            {{ book.publication_date }}
+        </p>
+        <a href="{% url 'edit_book' book.id %}">
+            Edit
+        </a>
+
+        <hr>
+
+    {% empty %}
+
+        <p>No books found.</p>
+
+    {% endfor %}
+
+</body>
+</html>
