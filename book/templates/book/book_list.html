@@ -1,5 +1,7 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Library Books</title>
@@ -9,11 +11,26 @@
 
     <h1>Library Books</h1>
 
+
+    <!-- Add Book -->
+
+    <a href="{% url 'add_book' %}">
+        Add New Book
+    </a>
+
+    <hr>
+
+
+    <!-- Search -->
+
+    <h2>Search</h2>
+
     <form method="get">
 
         <input
             type="text"
             name="q"
+            value="{{ query|default:'' }}"
             placeholder="Search by title or author"
         >
 
@@ -23,54 +40,170 @@
 
     </form>
 
-    <br>
+    <hr>
 
-    <a href="{% url 'add_book' %}">
-        Add New Book
-    </a>
+
+    <!-- Filter -->
+
+    <h2>Filter Books</h2>
+
+    <form method="get">
+
+        <label>
+            Minimum Price:
+        </label>
+
+        <input
+            type="number"
+            name="min_price"
+            value="{{ min_price|default:'' }}"
+            step="0.01"
+        >
+
+        <br><br>
+
+
+        <label>
+            Maximum Price:
+        </label>
+
+        <input
+            type="number"
+            name="max_price"
+            value="{{ max_price|default:'' }}"
+            step="0.01"
+        >
+
+        <br><br>
+
+
+        <label>
+            Publication Date:
+        </label>
+
+        <input
+            type="date"
+            name="publication_date"
+            value="{{ publication_date|default:'' }}"
+        >
+
+        <br><br>
+
+
+        <button type="submit">
+            Filter
+        </button>
+
+    </form>
 
     <hr>
 
+
+    <!-- Delete Filtered Books -->
+
+    {% if is_filtered %}
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="min_price"
+                value="{{ min_price|default:'' }}"
+            >
+
+            <input
+                type="hidden"
+                name="max_price"
+                value="{{ max_price|default:'' }}"
+            >
+
+            <input
+                type="hidden"
+                name="publication_date"
+                value="{{ publication_date|default:'' }}"
+            >
+
+            <button type="submit">
+                Delete Filtered Books
+            </button>
+
+        </form>
+
+    {% endif %}
+
+    <hr>
+
+
+    <!-- Books -->
+
+    <h2>Books</h2>
+
     {% for book in books %}
 
-        <h2>{{ book.title }}</h2>
+        <div>
 
-        <p>
-            Author:
-            {{ book.author.first_name }}
-            {{ book.author.last_name }}
-        </p>
+            <h3>
+                {{ book.title }}
+            </h3>
 
-        <p>
-            Publisher:
-            {{ book.publisher.name }}
-        </p>
+            <p>
+                <strong>Author:</strong>
+                {{ book.author.first_name }}
+                {{ book.author.last_name }}
+            </p>
 
-        <p>
-            Genre:
-            {{ book.get_genre_display }}
-        </p>
+            <p>
+                <strong>Publisher:</strong>
+                {{ book.publisher.name }}
+            </p>
 
-        <p>
-            Price:
-            {{ book.price }}
-        </p>
+            <p>
+                <strong>Genre:</strong>
+                {{ book.get_genre_display }}
+            </p>
 
-        <p>
-            Publication date:
-            {{ book.publication_date }}
-        </p>
-        <a href="{% url 'edit_book' book.id %}">
-            Edit
-        </a>
+            <p>
+                <strong>Price:</strong>
+                {{ book.price }}
+            </p>
+
+            <p>
+                <strong>Publication Date:</strong>
+                {{ book.publication_date }}
+            </p>
+
+
+            <!-- Edit -->
+
+            <a href="{% url 'edit_book' book.id %}">
+                Edit
+            </a>
+
+            &nbsp;
+
+
+            <!-- Delete -->
+
+            <a href="{% url 'delete_book' book.id %}">
+                Delete
+            </a>
+
+        </div>
 
         <hr>
 
     {% empty %}
 
-        <p>No books found.</p>
+        <p>
+            No books found.
+        </p>
 
     {% endfor %}
 
+
 </body>
+
 </html>
+```
